@@ -22,15 +22,17 @@ const IndicesStatus = () => {
                 ))}
               </div>
               <div>
-                {Object.values(globalMarket.indicesGroups).map((indiceValue) =>
-                  getColorBasedOnStatus(indiceValue)
+                {Object.values(globalMarket.indicesGroups).map(
+                  (indiceValue, index) => (
+                    <div key={index}>{getColorBasedOnStatus(indiceValue)}</div>
+                  )
                 )}
               </div>
             </Flex>
           </div>
         </Card>
       ) : (
-        <Card>NO EXCHANGES DATA</Card>
+        <Card>NO INDICIES DATA</Card>
       )}
     </>
   );

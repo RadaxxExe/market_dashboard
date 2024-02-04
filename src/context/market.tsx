@@ -14,7 +14,7 @@ interface MarketContextProps {
   tickerDetails: ITickerDetails;
   setGlobalMarket: (newGlobalMarket: IMarketStatus) => void;
   setTickerDetails: (newTickerDetail: ITickerDetails) => void;
-  setTicker: (newTicker: string) => void;
+  setCurrentTicker: (newTicker: string) => void;
 }
 
 const MarketContext = createContext<MarketContextProps | undefined>(undefined);
@@ -24,11 +24,11 @@ interface MarketProviderProps {
 }
 
 export const MarketProvider: React.FC<MarketProviderProps> = ({ children }) => {
-  const [currentTicker, setNewCurrentTicker] = useState<string>("AAPL");
+  const [currentTicker, setNewCurrentTicker] = useState<string>("");
   const [globalMarket, setNewGlobalMarket] = useState<IMarketStatus>({});
   const [tickerDetails, setNewTickerDetails] = useState<ITickerDetails>({});
 
-  const setTicker = (newTicker: string) => {
+  const setCurrentTicker = (newTicker: string) => {
     setNewCurrentTicker(newTicker);
   };
 
@@ -46,7 +46,7 @@ export const MarketProvider: React.FC<MarketProviderProps> = ({ children }) => {
         currentTicker,
         globalMarket,
         tickerDetails,
-        setTicker,
+        setCurrentTicker,
         setGlobalMarket,
         setTickerDetails,
       }}

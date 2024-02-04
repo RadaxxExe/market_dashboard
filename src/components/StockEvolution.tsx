@@ -109,7 +109,9 @@ const StockEvolution = () => {
 
   useEffect(() => {
     console.log("FETCH TICKER STOCK");
-    fetchTickerPerformance();
+    if (currentTicker) {
+      fetchTickerPerformance();
+    }
   }, [currentTicker, timeRange]);
 
   const areaChartArgs = {
@@ -124,7 +126,7 @@ const StockEvolution = () => {
 
   return (
     <Grid numItemsMd={1} numItemsLg={1} className="gap-6 mt-6">
-      {tickerPerformance ? (
+      {tickerPerformance && (
         <Card>
           <div className="md:flex justify-between">
             <div>
@@ -158,10 +160,6 @@ const StockEvolution = () => {
             <AreaChart {...areaChartArgs} />
           </div>
         </Card>
-      ) : (
-        <Button icon={RefreshIcon} onClick={() => fetchTickerPerformance()}>
-          Refresh data
-        </Button>
       )}
     </Grid>
   );
