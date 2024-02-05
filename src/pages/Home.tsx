@@ -14,14 +14,15 @@ import {
 } from "@tremor/react";
 import Image from "next/image";
 
-import TickerDetails from "@/components/TickerDetails";
-import MarketStatus from "@/components/MarketStatus";
-import IndicesStatus from "@/components/IndicesStatus";
-import StockEvolution from "@/components/StockEvolution";
-import StockSearch from "@/components/StockSearch";
+import TickerDetails from "@/components/Stocks/TickerDetails";
+import MarketStatus from "@/components/Market/MarketStatus";
+import IndicesStatus from "@/components/Market/IndicesStatus";
+import StockEvolution from "@/components/Stocks/StockEvolution";
+import StockSearch from "@/components/Stocks/StockSearch";
+import CurrenciesStatus from "@/components/Market/CurrenciesStatus";
+import MarketHoliday from "@/components/Market/MarketHoliday";
 
 import Logo from "../../public/assets/logo.png";
-import CurrenciesStatus from "@/components/CurrenciesStatus";
 
 const Home = () => {
   return (
@@ -50,10 +51,11 @@ const Home = () => {
         <TabPanels>
           <TabPanel>
             <MarketStatus />
-            <Grid numItemsMd={2} numItemsLg={2} className="gap-6 mt-6">
+            <Grid numItemsMd={2} numItemsLg={2} className="gap-6 mt-6 mb-6">
               <IndicesStatus />
               <CurrenciesStatus />
             </Grid>
+            <MarketHoliday />
           </TabPanel>
 
           <TabPanel>

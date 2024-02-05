@@ -17,7 +17,9 @@ interface MarketContextProps {
   setCurrentTicker: (newTicker: string) => void;
 }
 
-const MarketContext = createContext<MarketContextProps | undefined>(undefined);
+export const MarketContext = createContext<MarketContextProps | undefined>(
+  undefined
+);
 
 interface MarketProviderProps {
   children: ReactNode;

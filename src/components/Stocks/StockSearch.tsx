@@ -35,7 +35,7 @@ const StockSearch = () => {
       }
     } catch (error: any) {
       if (error.response) {
-        console.log(error.response.status);
+        console.error(error.response.status);
         if (error.response.status === 429) {
           setIsTooManyRequest(true);
           console.error("ERROR - Too many request (429)");
@@ -60,7 +60,6 @@ const StockSearch = () => {
     setSearchResults(undefined);
   };
 
-  console.log("request", isTooManyRequest);
   return (
     <Flex alignItems="center" className="mb-5 mt-5">
       {isTooManyRequest && (

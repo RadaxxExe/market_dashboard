@@ -15,8 +15,6 @@ const TickerDetails = () => {
   const { currentTicker, tickerDetails, setTickerDetails } = useMarketContext();
 
   const fetchTickerDetails = async (ticker: string) => {
-    console.log("FETCH TICKER DETAIL");
-
     setIsTickerFound(false);
     setIsTooManyRequest(false);
     setIsLoading(true);
@@ -27,9 +25,9 @@ const TickerDetails = () => {
       setIsTickerFound(true);
       setIsLoading(false);
     } catch (error: any) {
-      console.log("error", error);
+      console.error("error", error);
       if (error.response) {
-        console.log(error.response);
+        console.error(error.response);
         if (error.response.status === 429) {
           setIsTooManyRequest(true);
           setIsLoading(false);
