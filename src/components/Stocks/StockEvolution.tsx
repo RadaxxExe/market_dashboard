@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   AreaChart,
-  Button,
   Card,
   Color,
   DateRangePicker,
@@ -19,7 +18,6 @@ import { IAggs } from "@polygon.io/client-js";
 import { formatDateToUSFormat } from "@/utils/formatDateToUSFormat";
 
 import { polyAPI, useMarketContext } from "@/context/market";
-import { RefreshIcon } from "@heroicons/react/solid";
 
 interface FormattedData {
   name: string;
@@ -123,47 +121,45 @@ const StockEvolution = () => {
     yAxisWidth: 60,
   };
 
+  if (!tickerPerformance) {
+    return <Card className="mt-5">NO TICKER PERFORMANCE DATA</Card>;
+  }
+
   return (
     <Grid numItemsMd={1} numItemsLg={1} className="gap-6 mt-6">
-      {tickerPerformance ? (
-        <Card>
-          <div className="md:flex justify-between">
-            <div>
-              <Flex
-                className="space-x-0.5"
-                justifyContent="start"
-                alignItems="center"
-              >
-                <Title>{currentTicker} - Stock evolution</Title>
-              </Flex>
-              <Text>Aggregate bars for a stock over a given date range</Text>
-              <DateRangePicker
-                className="max-w-sm mx-auto my-5"
-                value={timeRange}
-                onValueChange={setTimeRange}
-                enableSelect={true}
-              />
-            </div>
-            <div>
-              <TabGroup index={selectedIndex} onIndexChange={setSelectedIndex}>
-                <TabList color="gray" variant="solid">
-                  <Tab>High/Low</Tab>
-                  <Tab>Open/Close</Tab>
-                  <Tab>Volume</Tab>
-                </TabList>
-              </TabGroup>
-            </div>
+      <Card>
+        <div className="md:flex justify-between">
+          <div>
+            <Flex
+              className="space-x-0.5"
+              justifyContent="start"
+              alignItems="center"
+            >
+              <Title>{currentTicker} - Stock evolution</Title>
+            </Flex>
+            <Text>Aggregate bars for a stock over a given date range</Text>
+            <DateRangePicker
+              className="max-w-sm mx-auto my-5"
+              value={timeRange}
+              onValueChange={setTimeRange}
+              enableSelect={true}
+            />
           </div>
+          <div>
+            <TabGroup index={selectedIndex} onIndexChange={setSelectedIndex}>
+              <TabList color="gray" variant="solid">
+                <Tab>High/Low</Tab>
+                <Tab>Open/Close</Tab>
+                <Tab>Volume</Tab>
+              </TabList>
+            </TabGroup>
+          </div>
+        </div>
 
-          <div className="mt-8 hidden sm:block">
-            <AreaChart {...areaChartArgs} />
-          </div>
-        </Card>
-      ) : (
-        <Button icon={RefreshIcon} onClick={() => fetchTickerPerformance()}>
-          Refresh data
-        </Button>
-      )}
+        <div className="mt-8 hidden sm:block">
+          <AreaChart {...areaChartArgs} />
+        </div>
+      </Card>
     </Grid>
   );
 };

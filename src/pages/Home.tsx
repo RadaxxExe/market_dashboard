@@ -23,6 +23,7 @@ import CurrenciesStatus from "@/components/Market/CurrenciesStatus";
 import MarketHoliday from "@/components/Market/MarketHoliday";
 
 import Logo from "../../public/assets/logo.png";
+import TickerFinancial from "@/components/Stocks/TickerFinancial";
 
 const Home = () => {
   return (
@@ -63,6 +64,7 @@ const Home = () => {
               <StockSearch />
               <TickerDetails />
               <StockEvolution />
+              <TickerFinancial />
             </div>
           </TabPanel>
         </TabPanels>

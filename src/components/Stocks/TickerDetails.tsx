@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { RefreshIcon, SearchIcon } from "@heroicons/react/solid";
-import { Button, Card, Flex, Subtitle, Title } from "@tremor/react";
+import { Card, Flex, Subtitle, Title } from "@tremor/react";
 import _debounce from "lodash/debounce";
 import Image from "next/image";
 
@@ -10,13 +9,11 @@ import { MutatingDots } from "react-loader-spinner";
 
 const TickerDetails = () => {
   const [isTickerFound, setIsTickerFound] = useState(true);
-  const [isTooManyRequest, setIsTooManyRequest] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { currentTicker, tickerDetails, setTickerDetails } = useMarketContext();
 
   const fetchTickerDetails = async (ticker: string) => {
     setIsTickerFound(false);
-    setIsTooManyRequest(false);
     setIsLoading(true);
 
     try {
@@ -25,18 +22,8 @@ const TickerDetails = () => {
       setIsTickerFound(true);
       setIsLoading(false);
     } catch (error: any) {
-      console.error("error", error);
       if (error.response) {
         console.error(error.response);
-        if (error.response.status === 429) {
-          setIsTooManyRequest(true);
-          setIsLoading(false);
-          console.error("ERROR - Too many request (429)");
-        } else if (error.response.status === 404) {
-          setIsTickerFound(false);
-          setIsLoading(false);
-          console.error("ERROR - Ticker details not found (404)");
-        }
       } else {
         console.error("ERROR - Fail to fetch ticker details:", error);
         throw error;
@@ -81,20 +68,6 @@ const TickerDetails = () => {
             information on the company that owns the stock.
           </Title>
         )}
-        {isTooManyRequest && (
-          <Flex>
-            <Title>
-              There seems to be too many request, please wait a bit before
-              retrying
-            </Title>
-            <Button
-              icon={RefreshIcon}
-              onClick={() => debouncedFetchTickerDetails(currentTicker)}
-            >
-              Refresh data
-            </Button>
-          </Flex>
-        )}
         {/* TODO: UI glitch when changing ticker */}
         {!isTickerFound && (
           <Title>
@@ -103,7 +76,7 @@ const TickerDetails = () => {
           </Title>
         )}
 
-        {tickerDetails.results && isTickerFound && !isTooManyRequest ? (
+        {tickerDetails.results && isTickerFound ? (
           <>
             <Flex>
               <img

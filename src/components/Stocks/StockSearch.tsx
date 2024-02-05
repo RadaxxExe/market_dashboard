@@ -17,9 +17,8 @@ import { debounce } from "lodash";
 const MAX_SEARCH_RESULT = 10;
 
 const StockSearch = () => {
-  const { currentTicker, setCurrentTicker } = useMarketContext();
+  const { setCurrentTicker } = useMarketContext();
   const [searchTerm, setSearchTerm] = useState("");
-  const [isTooManyRequest, setIsTooManyRequest] = useState(false);
   const [searchResults, setSearchResults] = useState<ITickers>();
 
   const debouncedFetchStocks = debounce(async (term) => {
@@ -36,10 +35,6 @@ const StockSearch = () => {
     } catch (error: any) {
       if (error.response) {
         console.error(error.response.status);
-        if (error.response.status === 429) {
-          setIsTooManyRequest(true);
-          console.error("ERROR - Too many request (429)");
-        }
       } else {
         console.error("ERROR - Fail to fetch ticker search:", error);
         throw error;
@@ -62,12 +57,6 @@ const StockSearch = () => {
 
   return (
     <Flex alignItems="center" className="mb-5 mt-5">
-      {isTooManyRequest && (
-        <Text>
-          There&apos;s seems to be too many request, wait a bit before searching
-          agin.
-        </Text>
-      )}
       <TextInput
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
@@ -88,7 +77,7 @@ const StockSearch = () => {
           className="px-10 z-10"
           style={{
             position: "absolute",
-            top: "245px",
+            top: "250px",
             maxWidth: "600px",
           }}
         >
