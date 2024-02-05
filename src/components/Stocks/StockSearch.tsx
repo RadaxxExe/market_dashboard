@@ -1,14 +1,6 @@
 import { useEffect, useState } from "react";
-import { SearchIcon } from "@heroicons/react/solid";
-import {
-  TextInput,
-  List,
-  ListItem,
-  Button,
-  Flex,
-  Card,
-  Text,
-} from "@tremor/react";
+import { BanIcon, CheckIcon, SearchIcon } from "@heroicons/react/solid";
+import { TextInput, List, ListItem, Button, Flex, Card } from "@tremor/react";
 
 import { polyAPI, useMarketContext } from "@/context/market";
 import { ITickers } from "@polygon.io/client-js";
@@ -19,6 +11,7 @@ const MAX_SEARCH_RESULT = 10;
 const StockSearch = () => {
   const { setCurrentTicker } = useMarketContext();
   const [searchTerm, setSearchTerm] = useState("");
+  const [isAutoCompleteActivated, setIsAutoCompleteActivated] = useState(false);
   const [searchResults, setSearchResults] = useState<ITickers>();
 
   const debouncedFetchStocks = debounce(async (term) => {
@@ -43,7 +36,7 @@ const StockSearch = () => {
   }, 500);
 
   useEffect(() => {
-    if (searchTerm.trim() !== "") {
+    if (searchTerm.trim() !== "" && isAutoCompleteActivated) {
       debouncedFetchStocks(searchTerm);
     } else {
       setSearchResults(undefined);
@@ -63,7 +56,16 @@ const StockSearch = () => {
         placeholder="Search..."
         className="mr-5"
       />
-      {/* Use search button to decrease 429 error */}
+      {/* Add a button to disable the autocomplete (429) */}
+      <Button
+        className="mr-2"
+        color={isAutoCompleteActivated ? "green" : "red"}
+        icon={isAutoCompleteActivated ? CheckIcon : BanIcon}
+        variant="secondary"
+        onClick={() => setIsAutoCompleteActivated(!isAutoCompleteActivated)}
+      >
+        AC
+      </Button>
       <Button
         icon={SearchIcon}
         variant="secondary"

@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Card,
   Flex,
   Grid,
   Tab,
@@ -21,9 +20,9 @@ import StockEvolution from "@/components/Stocks/StockEvolution";
 import StockSearch from "@/components/Stocks/StockSearch";
 import CurrenciesStatus from "@/components/Market/CurrenciesStatus";
 import MarketHoliday from "@/components/Market/MarketHoliday";
+import TickerFinancial from "@/components/Stocks/TickerFinancial";
 
 import Logo from "../../public/assets/logo.png";
-import TickerFinancial from "@/components/Stocks/TickerFinancial";
 
 const Home = () => {
   return (
@@ -47,7 +46,6 @@ const Home = () => {
         <TabList>
           <Tab>Market Overview</Tab>
           <Tab>Stocks</Tab>
-          <Tab>Options</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>

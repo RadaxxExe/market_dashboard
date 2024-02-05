@@ -1,34 +1,29 @@
 import { useEffect, useState } from "react";
 import { Card, Flex, Subtitle, Title } from "@tremor/react";
 import _debounce from "lodash/debounce";
-import Image from "next/image";
 
 import { numberFormatter } from "@/utils/numberFormatter";
-import { polyAPI, useMarketContext } from "@/context/market";
-import { MutatingDots } from "react-loader-spinner";
+import { useMarketContext } from "@/context/market";
+import { fetchPolygon } from "@/utils/fetchPolygon";
 
 const TickerDetails = () => {
   const [isTickerFound, setIsTickerFound] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const { currentTicker, tickerDetails, setTickerDetails } = useMarketContext();
 
-  const fetchTickerDetails = async (ticker: string) => {
+  const fetchTickerDetails = (ticker: string) => {
     setIsTickerFound(false);
-    setIsLoading(true);
 
-    try {
-      const data = await polyAPI.reference.tickerDetails(ticker);
-      setTickerDetails(data);
-      setIsTickerFound(true);
-      setIsLoading(false);
-    } catch (error: any) {
-      if (error.response) {
-        console.error(error.response);
-      } else {
-        console.error("ERROR - Fail to fetch ticker details:", error);
-        throw error;
-      }
-    }
+    fetchPolygon(`/v3/reference/tickers/${ticker}`)
+      .then((data) => {
+        console.log("data", data);
+        if (data) {
+          setTickerDetails(data);
+          setIsTickerFound(true);
+        } else {
+          setIsTickerFound(false);
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   const debouncedFetchTickerDetails = _debounce(fetchTickerDetails, 1000);
@@ -41,34 +36,22 @@ const TickerDetails = () => {
     return () => debouncedFetchTickerDetails.cancel();
   }, [currentTicker]);
 
-  if (isLoading) {
-    return (
-      <Card>
-        <div className="h-90 place-items-center">
-          <MutatingDots
-            visible={true}
-            height="150"
-            width="150"
-            ariaLabel="mutating-dots-loading"
-            secondaryColor="#4CAF50"
-            color="#e15b64"
-          />
-        </div>
-      </Card>
-    );
+  if (!tickerDetails.results) {
+    return <Card>NO TICKER DETAIL DATA</Card>;
   }
 
-  // Might be interesting to add Loader
+  const { name, description, homepage_url, branding, market_cap } =
+    tickerDetails.results;
+
   return (
     <Card>
       <div className="h-90">
         {currentTicker === "" && (
-          <Title>
+          <Title className="mb-5">
             Search for a specific ticker using the search bar to obtain
             information on the company that owns the stock.
           </Title>
         )}
-        {/* TODO: UI glitch when changing ticker */}
         {!isTickerFound && (
           <Title>
             Sorry we didn&apos;t find any ticker with the name &quot;
@@ -76,27 +59,25 @@ const TickerDetails = () => {
           </Title>
         )}
 
-        {tickerDetails.results && isTickerFound ? (
+        {isTickerFound ? (
           <>
             <Flex>
               <img
-                src={tickerDetails.results.branding?.logo_url}
+                src={`${branding?.logo_url}?apiKey=${process.env.NEXT_PUBLIC_POLY_API_KEY}`}
                 alt="branding-icon"
+                width={75}
+                height={75}
               />
-              <span>{tickerDetails.results.name}</span>
+              <span>{name}</span>
             </Flex>
             <br />
-            <Subtitle>{tickerDetails.results.description}</Subtitle>
+            <Subtitle>{description}</Subtitle>
             <br />
-            <span>
-              {`Market Cap: ${numberFormatter(
-                tickerDetails.results.market_cap
-              )}`}
-            </span>
+            <span>{`Market Cap: ${numberFormatter(market_cap)}`}</span>
             <Flex>
               <span>
-                <a href={tickerDetails.results.homepage_url} />
-                {tickerDetails.results.homepage_url}
+                <a href={homepage_url} />
+                {homepage_url}
               </span>
             </Flex>
           </>

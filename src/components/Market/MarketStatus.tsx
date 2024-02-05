@@ -2,22 +2,23 @@ import { useEffect } from "react";
 import { Card, Grid, Text } from "@tremor/react";
 
 import { getColorBasedOnStatus } from "@/utils/getColorBasedOnStatus";
-import { apiCallWithRetry } from "@/utils/apiCallWithRetry";
 
 import { polyAPI, useMarketContext } from "@/context/market";
 
 const MarketStatus = () => {
   const { globalMarket, setGlobalMarket } = useMarketContext();
 
+  const fetchMarketStatus = async () => {
+    try {
+      const data = await polyAPI.reference.marketStatus();
+      return setGlobalMarket(data);
+    } catch (error) {
+      return console.error("ERROR - Fail to fetch market Status:", error);
+    }
+  };
+
   useEffect(() => {
-    apiCallWithRetry(async () => {
-      try {
-        const data = await polyAPI.reference.marketStatus();
-        return setGlobalMarket(data);
-      } catch (error) {
-        return console.error("ERROR - Fail to fetch market Status:", error);
-      }
-    });
+    fetchMarketStatus();
   }, []);
 
   if (!globalMarket.exchanges) {

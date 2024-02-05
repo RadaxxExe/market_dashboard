@@ -70,6 +70,7 @@ const StockEvolution = () => {
       return { name: "", data: [] };
     }
 
+    // Format data for the AreaChart
     return {
       name: polygonData.ticker ?? "",
       data: polygonData.results.map((result) => ({
@@ -122,11 +123,11 @@ const StockEvolution = () => {
   };
 
   if (!tickerPerformance) {
-    return <Card className="mt-5">NO TICKER PERFORMANCE DATA</Card>;
+    return <Card className="my-5">NO TICKER PERFORMANCE DATA</Card>;
   }
 
   return (
-    <Grid numItemsMd={1} numItemsLg={1} className="gap-6 mt-6">
+    <Grid numItemsMd={1} numItemsLg={1} className="gap-6 mt-6 my-5">
       <Card>
         <div className="md:flex justify-between">
           <div>

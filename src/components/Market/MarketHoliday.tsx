@@ -37,6 +37,7 @@ const MarketHoliday = () => {
     fetchMarketHolidays();
   }, []);
 
+  // Change the color of the text based on the difference in day between the current date and the upcoming market holiday date
   const dateComparison = (date?: string) => {
     if (!date) {
       return undefined;
