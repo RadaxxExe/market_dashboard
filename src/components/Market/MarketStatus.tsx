@@ -1,10 +1,11 @@
 import { useEffect } from "react";
-import { Card, Grid, Text } from "@tremor/react";
+import { Button, Card, Grid, Text } from "@tremor/react";
 
 import { getColorBasedOnStatus } from "@/utils/getColorBasedOnStatus";
 
 import { useMarketContext } from "@/context/market";
 import { fetchPolygon } from "@/utils/fetchPolygon";
+import { RefreshIcon } from "@heroicons/react/solid";
 
 const MarketStatus = () => {
   const { globalMarket, setGlobalMarket } = useMarketContext();
@@ -24,7 +25,19 @@ const MarketStatus = () => {
   }, []);
 
   if (!globalMarket.exchanges) {
-    return <Card data-testid="exchanges">NO EXCHANGES DATA</Card>;
+    return (
+      <Card data-testid="exchanges">
+        NO EXCHANGES DATA
+        <br />
+        <Button
+          icon={RefreshIcon}
+          onClick={() => fetchMarketStatus()}
+          className="mt-2"
+        >
+          Refresh
+        </Button>
+      </Card>
+    );
   }
 
   return (

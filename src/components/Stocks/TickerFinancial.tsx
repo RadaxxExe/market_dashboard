@@ -87,21 +87,20 @@ const TickerFinancial = () => {
   return (
     <Card className="mt-5">
       <Title>{currentTicker} - Financial Data</Title>
-      <Select
-        value={timeframe}
-        onValueChange={setTimeframe}
-        className="max-w-30"
-      >
-        <SelectItem value="quarterly" icon={CalculatorIcon}>
-          Quarterly
-        </SelectItem>
-        <SelectItem value="annual" icon={CalculatorIcon}>
-          Annual
-        </SelectItem>
-        <SelectItem value="ttm" icon={CalculatorIcon}>
-          TTM
-        </SelectItem>
-      </Select>
+      <div className="mt-5" style={{ width: 300 }}>
+        <Select value={timeframe} onValueChange={setTimeframe}>
+          <SelectItem value="quarterly" icon={CalculatorIcon}>
+            Quarterly
+          </SelectItem>
+          <SelectItem value="annual" icon={CalculatorIcon}>
+            Annual
+          </SelectItem>
+          <SelectItem value="ttm" icon={CalculatorIcon}>
+            TTM
+          </SelectItem>
+        </Select>
+      </div>
+
       <BarChart
         className="mt-6"
         data={tickerFinancial.data}

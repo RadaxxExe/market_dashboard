@@ -13,6 +13,7 @@ import {
 import { IMarketHoliday } from "@polygon.io/client-js";
 
 import { fetchPolygon } from "@/utils/fetchPolygon";
+import { RefreshIcon } from "@heroicons/react/solid";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -20,17 +21,17 @@ const MarketHoliday = () => {
   const [marketHolidays, setMarketHolidays] = useState<IMarketHoliday[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const fetchMarketHolidays = () => {
-      fetchPolygon(`/v1/marketstatus/upcoming`)
-        .then((data) => {
-          if (data) {
-            setMarketHolidays(data);
-          }
-        })
-        .catch((err) => console.error(err));
-    };
+  const fetchMarketHolidays = () => {
+    fetchPolygon(`/v1/marketstatus/upcoming`)
+      .then((data) => {
+        if (data) {
+          setMarketHolidays(data);
+        }
+      })
+      .catch((err) => console.error(err));
+  };
 
+  useEffect(() => {
     fetchMarketHolidays();
   }, []);
 
@@ -57,7 +58,18 @@ const MarketHoliday = () => {
   };
 
   if (!marketHolidays.length) {
-    return <Card data-testid="market-holidays">NO MARKET HOLIDAYS DATA</Card>;
+    return (
+      <Card data-testid="market-holidays">
+        NO MARKET HOLIDAYS DATA <br />
+        <Button
+          icon={RefreshIcon}
+          onClick={() => fetchMarketHolidays()}
+          className="mt-2"
+        >
+          Refresh
+        </Button>
+      </Card>
+    );
   }
 
   return (
