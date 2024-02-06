@@ -15,7 +15,6 @@ const TickerDetails = () => {
 
     fetchPolygon(`/v3/reference/tickers/${ticker}`)
       .then((data) => {
-        console.log("data", data);
         if (data) {
           setTickerDetails(data);
           setIsTickerFound(true);

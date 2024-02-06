@@ -1,13 +1,23 @@
 import { useEffect, useState } from "react";
 import { IStockFinancialResults } from "@polygon.io/client-js";
-import { BarChart, Button, Card, Flex, Title } from "@tremor/react";
-import { RefreshIcon } from "@heroicons/react/solid";
+import {
+  BarChart,
+  Button,
+  Card,
+  Flex,
+  Select,
+  SelectItem,
+  Title,
+} from "@tremor/react";
+import { CalculatorIcon, RefreshIcon } from "@heroicons/react/solid";
 
 import { TickerFinancialData } from "@/context/market.type";
-import { polyAPI, useMarketContext } from "@/context/market";
+import { useMarketContext } from "@/context/market";
+import { fetchPolygon } from "@/utils/fetchPolygon";
 
 const TickerFinancial = () => {
   const { currentTicker } = useMarketContext();
+  const [timeframe, setTimeframe] = useState("quarterly");
   const [tickerFinancial, setTickerFinancial] = useState<TickerFinancialData>();
 
   const formatPolygonData = (
@@ -39,31 +49,24 @@ const TickerFinancial = () => {
     };
   };
 
-  const fetchTickerFinance = async () => {
-    try {
-      const data = await polyAPI.reference.stockFinancials({
-        ticker: currentTicker,
-        timeframe: "quarterly",
-      });
-      if (data) {
-        const formattedData = formatPolygonData(data);
-        setTickerFinancial(formattedData);
-      } else {
-        console.error("ERROR - Ticker data not available");
-      }
-    } catch (error) {
-      return console.error(
-        "ERROR - Fail to fetch ticker financial data:",
-        error
-      );
-    }
+  const fetchTickerFinance = () => {
+    fetchPolygon(
+      `/vX/reference/financials?ticker=${currentTicker}&timeframe=${timeframe}`
+    )
+      .then((data) => {
+        if (data) {
+          const formattedData = formatPolygonData(data);
+          setTickerFinancial(formattedData);
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   useEffect(() => {
     if (currentTicker) {
       fetchTickerFinance();
     }
-  }, [currentTicker]);
+  }, [currentTicker, timeframe]);
 
   const valueFormatter = (number: number) =>
     `$ ${new Intl.NumberFormat("us").format(number).toString()}`;
@@ -84,9 +87,25 @@ const TickerFinancial = () => {
   return (
     <Card className="mt-5">
       <Title>{currentTicker} - Financial Data</Title>
+      <Select
+        value={timeframe}
+        onValueChange={setTimeframe}
+        className="max-w-30"
+      >
+        <SelectItem value="quarterly" icon={CalculatorIcon}>
+          Quarterly
+        </SelectItem>
+        <SelectItem value="annual" icon={CalculatorIcon}>
+          Annual
+        </SelectItem>
+        <SelectItem value="ttm" icon={CalculatorIcon}>
+          TTM
+        </SelectItem>
+      </Select>
       <BarChart
         className="mt-6"
         data={tickerFinancial.data}
+        showAnimation
         index="fiscal_period"
         categories={[
           "assets",

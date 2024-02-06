@@ -3,18 +3,20 @@ import { Card, Grid, Text } from "@tremor/react";
 
 import { getColorBasedOnStatus } from "@/utils/getColorBasedOnStatus";
 
-import { polyAPI, useMarketContext } from "@/context/market";
+import { useMarketContext } from "@/context/market";
+import { fetchPolygon } from "@/utils/fetchPolygon";
 
 const MarketStatus = () => {
   const { globalMarket, setGlobalMarket } = useMarketContext();
 
-  const fetchMarketStatus = async () => {
-    try {
-      const data = await polyAPI.reference.marketStatus();
-      return setGlobalMarket(data);
-    } catch (error) {
-      return console.error("ERROR - Fail to fetch market Status:", error);
-    }
+  const fetchMarketStatus = () => {
+    fetchPolygon(`/v1/marketstatus/now`)
+      .then((data) => {
+        if (data) {
+          setGlobalMarket(data);
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   useEffect(() => {

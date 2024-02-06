@@ -1,12 +1,6 @@
 "use client";
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import {
-  IMarketStatus,
-  ITickerDetails,
-  restClient,
-} from "@polygon.io/client-js";
-
-export const polyAPI = restClient(process.env.NEXT_PUBLIC_POLY_API_KEY);
+import { IMarketStatus, ITickerDetails } from "@polygon.io/client-js";
 
 interface MarketContextProps {
   currentTicker: string;

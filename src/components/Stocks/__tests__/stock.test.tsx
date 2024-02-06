@@ -1,7 +1,6 @@
 import "@testing-library/jest-dom";
 import { render, screen, act } from "@testing-library/react";
 
-import { polyAPI } from "../../../context/market";
 import StockEvolution from "../StockEvolution";
 import TickerFinancial from "../TickerFinancial";
 

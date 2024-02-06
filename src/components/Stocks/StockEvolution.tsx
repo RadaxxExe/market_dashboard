@@ -17,7 +17,8 @@ import { IAggs } from "@polygon.io/client-js";
 
 import { formatDateToUSFormat } from "@/utils/formatDateToUSFormat";
 
-import { polyAPI, useMarketContext } from "@/context/market";
+import { useMarketContext } from "@/context/market";
+import { fetchPolygon } from "@/utils/fetchPolygon";
 
 interface FormattedData {
   name: string;
@@ -86,24 +87,19 @@ const StockEvolution = () => {
     };
   };
 
-  const fetchTickerPerformance = async () => {
-    try {
-      const data = await polyAPI.stocks.aggregates(
-        currentTicker,
-        1,
-        "day",
-        formatDateToUSFormat(timeRange.from),
-        formatDateToUSFormat(timeRange.to)
-      );
-      if (data) {
-        const formattedData = formatPolygonData(data);
-        setTickerPerformance(formattedData);
-      } else {
-        console.error("ERROR - Ticker data not available");
-      }
-    } catch (error) {
-      return console.error("ERROR - Fail to fetch ticker aggregation:", error);
-    }
+  const fetchTickerPerformance = () => {
+    fetchPolygon(
+      `/v2/aggs/ticker/${currentTicker}/range/1/day/${formatDateToUSFormat(
+        timeRange.from
+      )}/${formatDateToUSFormat(timeRange.to)}?adjusted=true&sort=asc&limit=120`
+    )
+      .then((data) => {
+        if (data) {
+          const formattedData = formatPolygonData(data);
+          setTickerPerformance(formattedData);
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   useEffect(() => {
@@ -158,7 +154,7 @@ const StockEvolution = () => {
         </div>
 
         <div className="mt-8 hidden sm:block">
-          <AreaChart {...areaChartArgs} />
+          <AreaChart showAnimation {...areaChartArgs} />
         </div>
       </Card>
     </Grid>

@@ -12,7 +12,7 @@ import {
 } from "@tremor/react";
 import { IMarketHoliday } from "@polygon.io/client-js";
 
-import { polyAPI } from "@/context/market";
+import { fetchPolygon } from "@/utils/fetchPolygon";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -21,17 +21,14 @@ const MarketHoliday = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const fetchMarketHolidays = async () => {
-      try {
-        const data = await polyAPI.reference.marketHolidays();
-        if (data) {
-          setMarketHolidays(data);
-        } else {
-          console.error("ERROR - Market holidays not available");
-        }
-      } catch (error) {
-        return console.error("ERROR - Fail to fetch market holidays:", error);
-      }
+    const fetchMarketHolidays = () => {
+      fetchPolygon(`/v1/marketstatus/upcoming`)
+        .then((data) => {
+          if (data) {
+            setMarketHolidays(data);
+          }
+        })
+        .catch((err) => console.error(err));
     };
 
     fetchMarketHolidays();

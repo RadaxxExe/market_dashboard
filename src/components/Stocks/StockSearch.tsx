@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { debounce } from "lodash";
 import { BanIcon, CheckIcon, SearchIcon } from "@heroicons/react/solid";
 import { TextInput, List, ListItem, Button, Flex, Card } from "@tremor/react";
-
-import { polyAPI, useMarketContext } from "@/context/market";
 import { ITickers } from "@polygon.io/client-js";
-import { debounce } from "lodash";
+
+import { fetchPolygon } from "@/utils/fetchPolygon";
+
+import { useMarketContext } from "@/context/market";
 
 const MAX_SEARCH_RESULT = 10;
 
@@ -15,24 +17,13 @@ const StockSearch = () => {
   const [searchResults, setSearchResults] = useState<ITickers>();
 
   const debouncedFetchStocks = debounce(async (term) => {
-    try {
-      const data = await polyAPI.reference.tickers({
-        search: term,
-      });
-
-      if (data) {
-        setSearchResults(data);
-      } else {
-        console.error("ERROR - Ticker data not available");
-      }
-    } catch (error: any) {
-      if (error.response) {
-        console.error(error.response.status);
-      } else {
-        console.error("ERROR - Fail to fetch ticker search:", error);
-        throw error;
-      }
-    }
+    fetchPolygon(`/v3/reference/tickers?search=${term}&active=true`)
+      .then((data) => {
+        if (data) {
+          setSearchResults(data);
+        }
+      })
+      .catch((err) => console.error(err));
   }, 500);
 
   useEffect(() => {
@@ -56,7 +47,7 @@ const StockSearch = () => {
         placeholder="Search..."
         className="mr-5"
       />
-      {/* Add a button to disable the autocomplete (429) */}
+      {/* Add a button to enabled/disable the autocomplete (429) */}
       <Button
         className="mr-2"
         color={isAutoCompleteActivated ? "green" : "red"}

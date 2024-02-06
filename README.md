@@ -1,4 +1,30 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Project
+
+This project is the technical test for the Alliance Gravity company.
+
+It's a dashboard that displays various data on stock prices using the Polygon.io API.
+
+Please note that the gratuit tier of the Polygon.io API only allows 5 API calls per minute.
+To mitigate this problem a little, all API calls are persisted in the cache, but if too many calls are made, the server will return a 429 error.
+
+## Project architecture
+
+The Market Overview page displays general stock market data.
+Here are its components:
+
+- Opening/closing status of major stocks
+- Index opening/closing status
+- Currencies (Crypto/Forex) opening/closing status
+- Summary table of days when stock markets are closed.
+  Closed days >60 days, between 60/90 days and +90 days are color-coded in red.
+
+On the Stocks page, you can find information on the price of a specific share.
+
+- The AC button to the right of the search bar can be used to activate or deactivate autocomplete.
+  Warning: autocomplete makes several API calls, and overusing it will return an error 429.
+- The MarketDetail component displays a summary of the company that owns the stock you're looking for.
+- The Stock Evolution component displays the High/Low, Open/Close and volume evolution of the stock searched for between 2 dates - the user can manually change the dates of interest using the date picker.
+- The last component, Financial Data, displays various information on the company's financial status
 
 ## Getting Started
 
@@ -16,21 +42,8 @@ bun dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To start the unit test use:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+npm run test
+```

@@ -1,10 +1,13 @@
 const POLYGON_API = "https://api.polygon.io";
 
 export const fetchPolygon = async (url: string) => {
-  return fetch(
-    `${POLYGON_API}${url}?apiKey=${process.env.NEXT_PUBLIC_POLY_API_KEY}`,
-    { cache: "force-cache", next: { revalidate: 3600 } }
-  )
+  return fetch(`${POLYGON_API}${url}`, {
+    headers: new Headers({
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_POLY_API_KEY}`,
+    }),
+    cache: "force-cache",
+    next: { revalidate: 3600 },
+  })
     .then(async (res) => {
       const data = await res.json();
       if (res.ok) return data;
